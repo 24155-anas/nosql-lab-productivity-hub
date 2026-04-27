@@ -27,8 +27,9 @@ const { deserializeStream } = require('bson');
   await db.collection('tasks').deleteMany({});
   await db.collection('notes').deleteMany({});
 
-
+ 
   const hashed_password = await bcrypt.hash('anas123', 10);
+  const hashed_password2 = await bcrypt.hash('ali123', 10);
   
 
   //USERS
@@ -43,7 +44,7 @@ const { deserializeStream } = require('bson');
   const u2 = await db.collection('users').insertOne({
     name: 'ali',
     email: 'ali@gmail.com',
-    passwordHash: hashed_password,
+    passwordHash: hashed_password2,
     createdAt: new Date()
   });
   const userId2 = u2.insertedId;
@@ -157,7 +158,7 @@ const { deserializeStream } = require('bson');
 
   const t5 = await db.collection('tasks').insertOne({
     ownerId: userId1,
-    projectId: p5_id,
+    projectId: p4_id,
     title: 'Task 5',
     status: 'in-progress',
     priority: 1,
@@ -212,7 +213,7 @@ const { deserializeStream } = require('bson');
 
   const n5 = await db.collection('notes').insertOne({
     ownerId: userId1,
-    projectId: p5_id,
+    projectId: p4_id,
     title: 'Note 5',
     content: 'This is the fifth note.',
     tags: ['general'],
@@ -223,7 +224,7 @@ const { deserializeStream } = require('bson');
 
 
 
-  console.log('TODO: implement seed.js');
+  console.log('implemented seed.js');
   process.exit(0);
 
   
