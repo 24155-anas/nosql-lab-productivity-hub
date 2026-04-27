@@ -44,6 +44,13 @@ const { ObjectId } = require('mongodb');
  * Hint: insertOne. Nothing fancy.
  */
 async function signupUser(db, userData) {
+  //first find the user to see if he exists
+  const existingUser = await db.collection('users').findOne({ email: userData.email });
+  if (existingUser) {
+    throw new Error('A user with that email already exists.');
+  }
+
+  //if not exist then insert the user
   const result = await db.collection('users').insertOne({
     email: userData.email,
     passwordHash: userData.passwordHash,
