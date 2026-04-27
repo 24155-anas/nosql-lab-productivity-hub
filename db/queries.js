@@ -319,7 +319,12 @@ async function removeTaskTag(db, taskId, tag) {
  *       matched), and your $set path uses `subtasks.$.done`.
  */
 async function toggleSubtask(db, taskId, subtaskTitle, newDone) {
-
+  const result = await db.collection('tasks').updateOne(
+    { _id: taskId, 'subtasks.title': subtaskTitle },
+    // $ represents the posititon inside subtasks arr that matched
+    { $set: { 'subtasks.$.done': newDone } }
+  );
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 }
 
 /**
