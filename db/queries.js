@@ -70,8 +70,11 @@ async function signupUser(db, userData) {
  * Hint: findOne with an exact-match filter.
  */
 async function loginFindUser(db, email) {
-  // TODO: implement
-  throw new Error('loginFindUser not implemented');
+  const user = await db.collection('users').findOne({email})
+  if (!user){
+    return null
+  }
+  return user 
 }
 
 /**
@@ -90,8 +93,7 @@ async function loginFindUser(db, email) {
  * Hint: find with two filter conditions, then .sort().toArray().
  */
 async function listUserProjects(db, ownerId) {
-  // TODO: implement
-  throw new Error('listUserProjects not implemented');
+
 }
 
 /**
