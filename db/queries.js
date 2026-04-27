@@ -141,8 +141,13 @@ async function createProject(db, projectData) {
  * Hint: updateOne with the $set operator.
  */
 async function archiveProject(db, projectId) {
-  // TODO: implement
-  throw new Error('archiveProject not implemented');
+  const result = await db.collection('projects').updateOne(
+    //is id ko search kro
+    { _id: projectId },
+    //then set archive true
+    { $set: { archived: true } }
+  );
+  return result;
 }
 
 /**
