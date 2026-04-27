@@ -56,6 +56,7 @@ For each collection, write the document shape (field name + type + required/opti
     }
   ] (optional),
   createdAt: Date (required),
+  description: string (optional),
   dueDate: Date (optional)
 }
 
