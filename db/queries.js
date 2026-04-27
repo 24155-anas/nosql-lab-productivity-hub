@@ -147,7 +147,10 @@ async function archiveProject(db, projectId) {
     //then set archive true
     { $set: { archived: true } }
   );
-  return result;
+  //dono 1/0 honge
+  //matychcount = no of documents matched the filter
+  //modifiedCount = no of documents actually modified
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 }
 
 /**
