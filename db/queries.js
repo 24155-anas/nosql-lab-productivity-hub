@@ -233,6 +233,11 @@ async function createTask(db, taskData) {
  * Hint: updateOne + $set.
  */
 async function updateTaskStatus(db, taskId, newStatus) {
+  const result = await db.collection('tasks').updateOne(
+    { _id: taskId },
+    { $set: { status: newStatus } }
+  );
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 
 
 }
