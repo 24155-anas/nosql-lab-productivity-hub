@@ -283,7 +283,13 @@ async function addTaskTag(db, taskId, tag) {
  * Hint: $pull.
  */
 async function removeTaskTag(db, taskId, tag) {
-
+  const result = await db.collection('tasks').updateOne(
+    {_id: taskId},
+    //pull operator use krte to remove an element from arr
+    //it will pull away the matching tag
+    { $pull: { tags: tag } }
+  );
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 }
 
 /**
