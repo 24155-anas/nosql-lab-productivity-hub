@@ -239,7 +239,6 @@ async function updateTaskStatus(db, taskId, newStatus) {
   );
   return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 
-
 }
 
 /**
@@ -259,7 +258,12 @@ async function updateTaskStatus(db, taskId, newStatus) {
  * Hint: which array operator silently skips duplicates? It is NOT $push.
  */
 async function addTaskTag(db, taskId, tag) {
-  throw new Error('addTaskTag not implemented');
+  const result = await db.collection('tasks').updateOne(
+    { _id: taskId },
+    //addtoset use krte to add an elemnt in arr only if it doesnt exist
+    { $addToSet: { tags: tag } }
+  );
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
 }
 
 /**
@@ -279,8 +283,7 @@ async function addTaskTag(db, taskId, tag) {
  * Hint: $pull.
  */
 async function removeTaskTag(db, taskId, tag) {
-  // TODO: implement
-  throw new Error('removeTaskTag not implemented');
+
 }
 
 /**
@@ -310,8 +313,7 @@ async function removeTaskTag(db, taskId, tag) {
  *       matched), and your $set path uses `subtasks.$.done`.
  */
 async function toggleSubtask(db, taskId, subtaskTitle, newDone) {
-  // TODO: implement
-  throw new Error('toggleSubtask not implemented');
+
 }
 
 /**
