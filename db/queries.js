@@ -416,10 +416,42 @@ async function searchNotes(db, ownerId, tags, projectId) {
  * Hint: $lookup returns an ARRAY (because joins can match many).
  *       $unwind turns a 1-element array into the element itself.
  */
+//q14
 async function projectTaskSummary(db, ownerId) {
-
-  
+  return await db.collection('tasks').aggregate([
+    { $match: { ownerId } },
+    {
+      $group: {
+        _id: '$projectId',
+        todo: { $sum: { $cond: [{ $eq: ['$status', 'todo'] }, 1, 0] } },
+        inProgress: { $sum: { $cond: [{ $eq: ['$status', 'in-progress'] }, 1, 0] } },
+        done: { $sum: { $cond: [{ $eq: ['$status', 'done'] }, 1, 0] } },
+        total: { $sum: 1 }
+      }
+    },
+    {
+      $lookup: {
+        from: 'projects',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'project'
+      }
+    },
+    { $unwind: '$project' },
+    {
+      $project: {
+        _id: 1,
+        projectName: '$project.name',
+        todo: 1,
+        inProgress: 1,
+        done: 1,
+        total: 1
+      }
+    }
+  ]).toArray();
 }
+
+
 
 /**
  * Query 15: recentActivityFeed
@@ -449,9 +481,33 @@ async function projectTaskSummary(db, ownerId) {
  * Hint: putting $sort and $limit BEFORE $lookup is intentional —
  *       you only want to look up 10 projects, not all of them.
  */
+//q15
 async function recentActivityFeed(db, ownerId) {
-  // TODO: implement
-  throw new Error('recentActivityFeed not implemented');
+  return await db.collection('tasks').aggregate([
+    { $match: { ownerId } },
+    { $sort: { createdAt: -1 } },
+    { $limit: 10 },
+    {
+      $lookup: {
+        from: 'projects',
+        localField: 'projectId',
+        foreignField: '_id',
+        as: 'project'
+      }
+    },
+    { $unwind: '$project' },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        status: 1,
+        priority: 1,
+        createdAt: 1,
+        projectId: 1,
+        projectName: '$project.name'
+      }
+    }
+  ]).toArray();
 }
 
 // =============================================================================
