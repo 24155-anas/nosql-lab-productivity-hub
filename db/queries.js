@@ -370,7 +370,17 @@ async function deleteTask(db, taskId) {
  *       Build the filter conditionally based on whether projectId was passed.
  */
 async function searchNotes(db, ownerId, tags, projectId) {
-
+  //in se mtlb in tags arr me se koi bhi match krta ho
+  const filter = { ownerId, tags: { $in: tags } }
+  //agr proj id provided ha to add it to filter
+  if (projectId){
+    filter.projectId = projectId
+  }
+  const notes = await db.collection('notes')
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .toArray();
+  return notes;
 }
 
 /**
