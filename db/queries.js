@@ -93,7 +93,11 @@ async function loginFindUser(db, email) {
  * Hint: find with two filter conditions, then .sort().toArray().
  */
 async function listUserProjects(db, ownerId) {
-
+    const projects = await db.collection('projects')
+    .find({ ownerId, archived: false })
+    .sort({ createdAt: -1 })
+    .toArray();
+  return projects;
 }
 
 /**
